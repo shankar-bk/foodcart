@@ -69,3 +69,4 @@ When registering a new account at `/register`, you can select your role:
 - Admin (For testing, you might need to register as a customer and then manually switch your role to 'admin' in MongoDB compass, or register via the UI if the dropdown is enabled for it).
 
 *Enjoy building the future of conversational commerce!*
+# foodcart
