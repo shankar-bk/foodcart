@@ -88,7 +88,7 @@ export default function RegisterPage() {
                             <select
                                 value={role}
                                 onChange={(e) => setRole(e.target.value)}
-                                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-lg"
+                                className="mt-1 block w-full pl-3 pr-10 py-2 text-black border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-lg"
                             >
                                 <option value="customer">Customer</option>
                                 <option value="restaurant">Restaurant Owner</option>

@@ -54,7 +54,7 @@ export default async function Home() {
           <div className="lg:w-1/3 w-full max-w-md bg-white/10 p-6 rounded-2xl backdrop-blur-md border border-white/20">
             <div className="text-sm font-medium mb-2 opacity-80">Example prompt:</div>
             <div className="bg-white/20 p-4 rounded-lg italic text-lg mb-4">
-              "I want a spicy chicken pizza around $15 from a top-rated place."
+              "I want a spicy chicken pizza around ₹400 from a top-rated place."
             </div>
             <div className="flex items-center gap-2 border-t border-white/20 pt-4 text-sm mt-4">
               <div className="w-8 h-8 rounded-full bg-orange-400 flex items-center justify-center">

@@ -35,7 +35,7 @@ export async function POST(req: Request) {
             price: item.price
         }));
 
-        // Create Order in DB
+        // Create Order in DB with random PINs
         const order = await Order.create({
             userId: session.user.id,
             restaurantId,
@@ -43,7 +43,10 @@ export async function POST(req: Request) {
             totalAmount,
             deliveryLocation,
             paymentStatus: 'pending',
-            orderStatus: 'placed'
+            orderStatus: 'placed',
+            restaurantPin: Math.floor(1000 + Math.random() * 9000).toString(),
+            customerPin: Math.floor(1000 + Math.random() * 9000).toString(),
+            deliveryEarnings: Math.floor(40 + Math.random() * 21)
         });
 
         // Generate Razorpay Order

@@ -24,7 +24,10 @@ const OrderSchema = new Schema(
             enum: ['placed', 'accepted', 'preparing', 'ready', 'out_for_delivery', 'delivered', 'cancelled'],
             default: 'placed'
         },
-        deliveryLocation: { type: String, required: true }
+        deliveryLocation: { type: String, required: true },
+        restaurantPin: { type: String },
+        customerPin: { type: String },
+        deliveryEarnings: { type: Number }
     },
     { timestamps: true }
 );

@@ -28,9 +28,15 @@ export default function Navbar() {
                                 <>
                                     {/* Desktop Links (Hidden on small mobile) */}
                                     <div className="hidden sm:flex items-center gap-6">
-                                        <Link href="/chat" className="text-gray-700 hover:text-orange-600 font-medium flex items-center gap-1 transition-colors">
+                                        <Link href="/chat" className="text-gray-700 hover:text-orange-600 font-medium flex items-center gap-1 transition-colors outline-none">
                                             <Sparkles className="h-4 w-4" /> AI Order
                                         </Link>
+
+                                        {session.user.role === 'customer' && (
+                                            <Link href="/orders" className="text-gray-700 hover:text-orange-600 font-medium transition-colors outline-none">
+                                                My Orders
+                                            </Link>
+                                        )}
 
                                         {session.user.role === 'customer' && (
                                             <Link href="/cart" className="text-gray-700 hover:text-orange-600 relative transition-colors">
@@ -61,10 +67,10 @@ export default function Navbar() {
                                     </div>
 
                                     <div className="flex items-center gap-3 sm:border-l sm:pl-6 border-gray-200">
-                                        <div className="flex flex-col items-end hidden sm:flex">
+                                        <Link href="/profile" className="flex flex-col items-end hidden sm:flex hover:text-orange-600 transition-colors">
                                             <span className="text-sm font-bold text-gray-900 leading-tight">{session.user.name?.split(' ')[0]}</span>
-                                            <span className="text-[10px] font-black uppercase text-orange-600 tracking-wider hidden sm:block">{session.user.role}</span>
-                                        </div>
+                                            <span className="text-[10px] font-black uppercase text-orange-600 tracking-wider hidden sm:block">Edit Profile</span>
+                                        </Link>
                                         <button
                                             onClick={() => signOut()}
                                             className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors bg-gray-50 sm:bg-transparent"
@@ -125,9 +131,9 @@ export default function Navbar() {
                             <span className="text-[10px] font-bold">Cart</span>
                         </Link>
 
-                        <Link href="/profile" className={`flex flex-col items-center gap-1 flex-1 py-1 rounded-xl transition-all ${pathname === '/profile' ? 'text-orange-600' : 'text-gray-400 hover:text-gray-600'}`}>
+                        <Link href="/orders" className={`flex flex-col items-center gap-1 flex-1 py-1 rounded-xl transition-all ${pathname === '/orders' ? 'text-orange-600' : 'text-gray-400 hover:text-gray-600'}`}>
                             <UserIcon className="h-6 w-6" />
-                            <span className="text-[10px] font-bold">Profile</span>
+                            <span className="text-[10px] font-bold">Orders</span>
                         </Link>
                     </div>
                 </div>

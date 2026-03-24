@@ -112,10 +112,9 @@ export default function ChatPage() {
                                             <div key={item._id} className="min-w-[220px] max-w-[240px] bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm flex flex-col snap-start flex-shrink-0 group">
                                                 <div className="h-32 bg-gray-100 relative overflow-hidden">
                                                     <img
-                                                        src={`https://source.unsplash.com/400x300/?${encodeURIComponent(item.name)}`}
+                                                        src={item.image || `https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80`}
                                                         alt={item.name}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                        onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80" }}
                                                     />
                                                     <div className="absolute top-2 left-2 flex gap-1">
                                                         <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-full shadow-sm backdrop-blur-md ${item.veg ? 'bg-green-500/90 text-white' : 'bg-red-500/90 text-white'}`}>
@@ -129,7 +128,7 @@ export default function ChatPage() {
                                                         <p className="text-xs text-gray-500 line-clamp-1 mb-3">{item.restaurantId?.name}</p>
                                                     </div>
                                                     <div className="flex items-center justify-between mt-auto">
-                                                        <span className="font-black text-lg text-gray-900">${item.price}</span>
+                                                        <span className="font-black text-lg text-gray-900">₹{item.price}</span>
                                                         <button
                                                             onClick={() => {
                                                                 handleAddToCart(item);
@@ -170,7 +169,7 @@ export default function ChatPage() {
                     <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-3 pb-1 -mx-3 px-3 sm:mx-0 sm:px-0">
                         <button onClick={() => setInput("I want vegetarian food")} className="flex-shrink-0 text-[10px] sm:text-xs font-bold text-gray-600 bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-full hover:bg-gray-200 transition active:scale-95 whitespace-nowrap">🌱 Veg options</button>
                         <button onClick={() => setInput("Show me highly rated burgers")} className="flex-shrink-0 text-[10px] sm:text-xs font-bold text-gray-600 bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-full hover:bg-gray-200 transition active:scale-95 whitespace-nowrap">⭐ Top Burgers</button>
-                        <button onClick={() => setInput("Cheap meals under $10")} className="flex-shrink-0 text-[10px] sm:text-xs font-bold text-gray-600 bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-full hover:bg-gray-200 transition active:scale-95 whitespace-nowrap">💰 Under $10</button>
+                        <button onClick={() => setInput("Cheap meals under ₹200")} className="flex-shrink-0 text-[10px] sm:text-xs font-bold text-gray-600 bg-gray-100 border border-gray-200 px-3 py-1.5 rounded-full hover:bg-gray-200 transition active:scale-95 whitespace-nowrap">💰 Under ₹200</button>
                     </div>
 
                     <form onSubmit={handleSubmit} className="flex gap-2 relative">

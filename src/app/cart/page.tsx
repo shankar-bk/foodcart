@@ -42,58 +42,18 @@ export default function CartPage() {
             return;
         }
 
-        setLoading(true);
+        const finalTotal = total + 40 + (total * 0.05); // Subtotal + ₹40 delivery + 5% tax
+
         try {
             // 1. Create order
             const { data } = await axios.post("/api/checkout", {
                 items: cart,
-                totalAmount: total,
+                totalAmount: finalTotal,
                 deliveryLocation: address
             });
 
-            // 2. Load Razorpay
-            const res = await loadRazorpay();
-            if (!res) {
-                alert("Razorpay SDK failed to load. Are you online?");
-                setLoading(false);
-                return;
-            }
-
-            const options = {
-                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_dummykey123", // Dummy key for frontend if true key is absent
-                amount: data.amount,
-                currency: "INR",
-                name: "FoodCart Delivery",
-                description: "Payment for your order",
-                order_id: data.rpOrderId.startsWith('dummy') ? undefined : data.rpOrderId,
-                handler: async function (response: any) {
-                    // 3. Verify Payment
-                    await axios.put("/api/checkout", {
-                        orderId: data.orderId,
-                        paymentId: response.razorpay_payment_id || 'dummy_success_id_123'
-                    });
-                    clearCart();
-                    // Redirect to tracking page
-                    router.push(`/orders/${data.orderId}`);
-                },
-                prefill: {
-                    name: session.user?.name,
-                    email: session.user?.email,
-                },
-                theme: {
-                    color: "#ea580c" // Tailwind orange-600
-                }
-            };
-
-            // Mock checkout if dummy order
-            if (data.rpOrderId.startsWith('dummy')) {
-                console.warn("Using mock checkout flow due to missing Razorpay keys");
-                await options.handler({ razorpay_payment_id: "mock_payment_" + Date.now() });
-                return;
-            }
-
-            const paymentObject = new (window as any).Razorpay(options);
-            paymentObject.open();
+            // Redirect to Dummy Payment Page instead of opening Razorpay popup
+            router.push(`/payment/${data.orderId}`);
 
         } catch (err) {
             console.error(err);
@@ -132,7 +92,7 @@ export default function CartPage() {
                                 <div key={item._id} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
                                     <div>
                                         <h4 className="font-bold text-gray-900 text-lg">{item.name}</h4>
-                                        <p className="text-gray-500 font-medium">${item.price}</p>
+                                        <p className="text-gray-500 font-medium">₹{item.price}</p>
                                     </div>
                                     <div className="flex items-center gap-5">
                                         <div className="flex items-center bg-gray-100 rounded-lg p-1">
@@ -175,19 +135,19 @@ export default function CartPage() {
                             <div className="space-y-4 text-gray-600 mb-6">
                                 <div className="flex justify-between">
                                     <span>Subtotal</span>
-                                    <span className="font-medium text-gray-900">${total.toFixed(2)}</span>
+                                    <span className="font-medium text-gray-900">₹{total.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Delivery Fee</span>
-                                    <span className="font-medium text-gray-900">$2.00</span>
+                                    <span className="font-medium text-gray-900">₹40.00</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Taxes</span>
-                                    <span className="font-medium text-gray-900">${(total * 0.05).toFixed(2)}</span>
+                                    <span className="font-medium text-gray-900">₹{(total * 0.05).toFixed(2)}</span>
                                 </div>
                                 <div className="border-t border-gray-200 pt-4 flex justify-between font-black text-xl text-gray-900">
                                     <span>Total</span>
-                                    <span>${(total + 2 + total * 0.05).toFixed(2)}</span>
+                                    <span>₹{(total + 40 + total * 0.05).toFixed(2)}</span>
                                 </div>
                             </div>
 

@@ -6,6 +6,16 @@ import { Order } from "@/models/Order";
 import { Restaurant } from "@/models/Restaurant";
 import { MenuItem } from "@/models/MenuItem"; // Ensure models are registered
 
+function getDeterministicPin(id: string, type: 'res' | 'cust') {
+    const seed = id.toString() + (type === 'res' ? 'RESTAURANT' : 'CUSTOMER');
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+        hash = (hash << 5) - hash + seed.charCodeAt(i);
+        hash |= 0;
+    }
+    return (Math.abs(hash) % 9000 + 1000).toString();
+}
+
 export async function GET(req: Request) {
     try {
         const session = await getServerSession(authOptions);
@@ -17,7 +27,6 @@ export async function GET(req: Request) {
         const restaurant = await Restaurant.findOne({ ownerId: session.user.id });
         if (!restaurant) return NextResponse.json([], { status: 200 });
 
-        // Using explicit populate names for items
         MenuItem.init();
         const orders = await Order.find({ restaurantId: restaurant._id })
             .populate({
@@ -27,7 +36,15 @@ export async function GET(req: Request) {
             })
             .sort({ createdAt: -1 });
 
-        return NextResponse.json(orders);
+        // Ensure PINs are always present via deterministic fallback
+        const ordersWithPins = orders.map((order: any) => {
+            const o = order.toObject();
+            if (!o.restaurantPin) o.restaurantPin = getDeterministicPin(o._id, 'res');
+            if (!o.customerPin) o.customerPin = getDeterministicPin(o._id, 'cust');
+            return o;
+        });
+
+        return NextResponse.json(ordersWithPins);
     } catch (err: any) {
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
@@ -43,12 +60,18 @@ export async function PUT(req: Request) {
         const { orderId, status } = await req.json();
         await dbConnect();
 
-        const order = await Order.findByIdAndUpdate(orderId, { orderStatus: status }, { new: true });
+        const order = await Order.findById(orderId);
+        if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
 
-        // In a real app, trigger Pusher event here to notify customer/delivery agent of order status change
-        // pusherServer.trigger(`order-${orderId}`, 'status-update', { status: order.orderStatus });
+        const updates: any = { orderStatus: status };
+        
+        // If PIN is missing, we use the deterministic one to save it permanently
+        if (!order.restaurantPin) updates.restaurantPin = getDeterministicPin(orderId, 'res');
+        if (!order.customerPin) updates.customerPin = getDeterministicPin(orderId, 'cust');
 
-        return NextResponse.json(order);
+        const updatedOrder = await Order.findByIdAndUpdate(orderId, updates, { new: true, returnDocument: 'after' });
+
+        return NextResponse.json(updatedOrder);
     } catch (err: any) {
         return NextResponse.json({ error: err.message }, { status: 500 });
     }

@@ -30,34 +30,41 @@ export default async function RestaurantsPage() {
                             <Link
                                 href={`/restaurants/${restaurant._id.toString()}`}
                                 key={restaurant._id.toString()}
-                                className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow group flex flex-col"
+                                className="bg-white rounded-[2rem] overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col"
                             >
-                                <div className="h-48 bg-orange-100 flex items-center justify-center relative overflow-hidden">
-                                    <Utensils className="h-12 w-12 text-orange-300 group-hover:scale-110 transition-transform duration-300" />
-                                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                                        <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                                        {restaurant.rating?.toFixed(1) || "New"}
+                                <div className="h-52 bg-orange-50 relative overflow-hidden">
+                                    {restaurant.image ? (
+                                        <img 
+                                            src={restaurant.image} 
+                                            alt={restaurant.name} 
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
+                                            <Utensils className="h-12 w-12 text-orange-200 group-hover:scale-110 transition-transform duration-300" />
+                                        </div>
+                                    )}
+                                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-sm font-black flex items-center gap-1 shadow-sm border border-white">
+                                        <Star className="h-4 w-4 text-orange-500 fill-current" />
+                                        {restaurant.rating > 0 ? restaurant.rating.toFixed(1) : "New"}
                                     </div>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </div>
-                                <div className="p-5 flex-1 flex flex-col">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2 truncate">{restaurant.name}</h3>
-                                    <div className="flex items-center text-gray-500 text-sm mb-4">
-                                        <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+                                <div className="p-6 flex-1 flex flex-col">
+                                    <h3 className="text-xl font-black text-gray-900 mb-2 truncate group-hover:text-orange-600 transition-colors">{restaurant.name}</h3>
+                                    <div className="flex items-center text-gray-400 text-xs font-bold mb-4 uppercase tracking-widest">
+                                        <MapPin className="h-3 w-3 mr-1 flex-shrink-0 text-orange-500" />
                                         <span className="truncate">{restaurant.location}</span>
                                     </div>
-                                    <div className="mt-auto">
-                                        <div className="flex flex-wrap gap-2">
-                                            {restaurant.cuisine?.slice(0, 3).map((c: string) => (
-                                                <span key={c} className="text-xs font-medium px-2 py-1 bg-gray-100 text-gray-600 rounded-md">
+                                    <div className="mt-auto pt-4 border-t border-gray-50 flex items-center justify-between">
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {(restaurant.cuisine || []).slice(0, 2).map((c: string) => (
+                                                <span key={c} className="text-[10px] font-black uppercase tracking-tighter px-2.5 py-1 bg-orange-50 text-orange-600 rounded-full">
                                                     {c}
                                                 </span>
                                             ))}
-                                            {restaurant.cuisine?.length > 3 && (
-                                                <span className="text-xs font-medium px-2 py-1 bg-gray-100 text-gray-600 rounded-md">
-                                                    +{restaurant.cuisine.length - 3}
-                                                </span>
-                                            )}
                                         </div>
+                                        <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest group-hover:text-orange-600 transition-colors">View Menu →</span>
                                     </div>
                                 </div>
                             </Link>

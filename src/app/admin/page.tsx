@@ -80,7 +80,7 @@ export default function AdminDashboard() {
                                 </div>
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                                     <p className="text-gray-500 font-medium mb-1">Revenue</p>
-                                    <h3 className="text-3xl font-black text-orange-600">${stats.revenue.toFixed(2)}</h3>
+                                    <h3 className="text-3xl font-black text-orange-600">₹{stats.revenue.toFixed(2)}</h3>
                                 </div>
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                                     <p className="text-gray-500 font-medium mb-1">Restaurants</p>

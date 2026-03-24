@@ -11,6 +11,7 @@ const UserSchema = new Schema(
             default: 'customer'
         },
         address: { type: String },
+        isOnline: { type: Boolean, default: false },
         orderHistory: [{ type: Schema.Types.ObjectId, ref: 'Order' }]
     },
     { timestamps: true }

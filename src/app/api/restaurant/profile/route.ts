@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/db";
-import { MenuItem } from "@/models/MenuItem";
 import { Restaurant } from "@/models/Restaurant";
 
 export async function GET(req: Request) {
@@ -14,46 +13,29 @@ export async function GET(req: Request) {
 
         await dbConnect();
         const restaurant = await Restaurant.findOne({ ownerId: session.user.id });
-        if (!restaurant) return NextResponse.json([], { status: 200 });
-
-        const menu = await MenuItem.find({ restaurantId: restaurant._id });
-        return NextResponse.json(menu);
+        return NextResponse.json(restaurant);
     } catch (err: any) {
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
 
-export async function POST(req: Request) {
+export async function PUT(req: Request) {
     try {
         const session = await getServerSession(authOptions);
         if (!session || session.user.role !== 'restaurant') {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const { name, price, description, veg, image } = await req.json();
+        const data = await req.json();
         await dbConnect();
 
-        // Check if restaurant exists for this user, if not create one
-        let restaurant = await Restaurant.findOne({ ownerId: session.user.id });
-        if (!restaurant) {
-            restaurant = await Restaurant.create({
-                ownerId: session.user.id,
-                name: `${session.user.name}'s Restaurant`,
-                location: "Virtual Location",
-                cuisine: ["Multi-cuisine"]
-            });
-        }
+        const restaurant = await Restaurant.findOneAndUpdate(
+            { ownerId: session.user.id },
+            { $set: data },
+            { new: true, upsert: true }
+        );
 
-        const newItem = await MenuItem.create({
-            restaurantId: restaurant._id,
-            name,
-            price,
-            description,
-            veg,
-            image
-        });
-
-        return NextResponse.json(newItem, { status: 201 });
+        return NextResponse.json({ success: true, restaurant });
     } catch (err: any) {
         return NextResponse.json({ error: err.message }, { status: 500 });
     }

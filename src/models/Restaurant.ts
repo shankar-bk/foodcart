@@ -7,6 +7,7 @@ const RestaurantSchema = new Schema(
         location: { type: String, required: true },
         rating: { type: Number, default: 0 },
         cuisine: [{ type: String }],
+        image: { type: String }, // Base64 or URL
         menuItems: [{ type: Schema.Types.ObjectId, ref: 'MenuItem' }]
     },
     { timestamps: true }

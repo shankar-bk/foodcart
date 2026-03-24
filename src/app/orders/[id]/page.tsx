@@ -100,6 +100,11 @@ export default function OrderTrackingPage({ params }: { params: Promise<{ id: st
                                     <div className="absolute inset-0 bg-[url('https://maps.googleapis.com/maps/api/staticmap?center=New+York,NY&zoom=14&size=600x300&key=NO_KEY')] bg-cover opacity-50 filter blur-[2px]"></div>
                                     <span className="relative z-10 bg-white/90 backdrop-blur px-3 py-1 font-bold text-gray-700 rounded-full shadow-sm text-sm">Live GPS Tracking (Simulated)</span>
                                 </div>
+                                <div className="mb-6 bg-orange-600 text-white p-6 rounded-[2rem] shadow-xl shadow-orange-100 flex flex-col items-center">
+                                    <span className="text-xs font-black uppercase tracking-[0.2em] mb-2 opacity-80">Your Delivery PIN</span>
+                                    <span className="text-5xl font-black tracking-[0.3em] ml-[0.3em]">{order.customerPin}</span>
+                                    <p className="mt-4 text-[10px] font-bold opacity-70">Share this with the rider only after receiving your food</p>
+                                </div>
                                 <h2 className="text-xl font-bold text-gray-900">Your driver is arriving soon!</h2>
                             </>
                         ) : (
